@@ -6,41 +6,33 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
-
 int main(void) {
   
-  char name[4];                   // is this size sufficient for input?
-  char greeting[6] = 'Hello';     // 
-  char status[3] = {'O', 'K','0'};      // another problem here
+  char name[5];                   // Bug1: increased size from 4 → 5, reserve space for null terminator '\0'
+  char greeting[6] = "Hello";     // Bug2: use double quotes for string literal (single quotes only for single char)
+  char status[4] = {'O', 'K','0', '\0'}; // Bug3: add null terminator at end for valid C string
 
   printf("Enter your name: ");
-  scanf("%s", name);              // is this safe?
-   
+  scanf("%4s", name);             // Bug4: limit input length to prevent buffer overflow
 
-    // Convert name to uppercase 
-    for (int i = 0; i < 5; i++) {  // 
-      name[i] = toupper(name[i]);
-    }
+  // Convert name to uppercase
+  int namelen = strlen(name);     // Bug5: use actual string length instead of fixed i<5
+  for (int i = 0; i < namelen; i++) {
+    name[i] = toupper(name[i]);
+  }
+  
+  // print the greeting, name and status
+  printf("\n%s there %s!\n", greeting, name);
+  printf("Everything is: %s\n", status);
+  // Find the length of the name
 
-    
-    // print the greeting, name and status
-
-    printf("\n%s there %s!\n", greeting, name);  // greeting init is wrong
-    printf("Everything is: %s\n", status);       // prints non-null-terminated "string"
-
-
-    // Find the length of the name
-
-    int namelen=strlen(name);
-
-    // Average from 1 to namelen
-
-    int sum = 0;
-    for (int i = 1; i < namelen; i++) {
-        sum = sum + i;
-    }
-    double avg = sum / namelen;            // remember to cast to double for correct division
-    printf("\nAverage score: %.2f\n", avg);
-
-    return 0;
+  // Average from 1 to namelen
+  int sum = 0;
+  for (int i = 1; i <= namelen; i++) {  // Bug6: use <=, include namelen in sum
+      sum = sum + i;
+  }
+  double avg = (double)sum / namelen;    // Bug7: cast sum to double to avoid integer division
+  printf("\nAverage score: %.2f\n", avg);
+  return 0;
 }
+
