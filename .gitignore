@@ -1,0 +1,13 @@
+# Compiled programs
+*.out
+
+# Object files
+*.o
+
+# Crash output
+core
+core.*
+
+# Operating-system files
+.DS_Store
+Thumbs.db
